@@ -10,7 +10,7 @@ import org.openrndr.shape.Rectangle
 class Player(initialPosition: Vector2, private val boundaries: Rectangle) {
     val radius = 20.0
     var position = initialPosition
-    private var speed = 2.0
+    var speed = 2.0
     private var dir = Vector2.ZERO
     val inBounds
         get() = boundaries.contains(position)

@@ -12,5 +12,6 @@ abstract class Target(boundaries: Rectangle) {
         this.position.distanceTo(playerPosition)
     }
     abstract val targetColor: ColorRGBa
+    abstract val targetType: TargetType
     abstract fun onHit()
 }

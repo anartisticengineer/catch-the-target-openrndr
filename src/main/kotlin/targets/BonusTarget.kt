@@ -6,6 +6,7 @@ import org.openrndr.shape.Rectangle
 
 class BonusTarget(boundaries: Rectangle): Target(boundaries){
     override val targetColor: ColorRGBa = ColorRGBa.GOLDENROD
+    override val targetType: TargetType = TargetType.BONUS
     override fun onHit() {
         println("Bonus Target")
     }
