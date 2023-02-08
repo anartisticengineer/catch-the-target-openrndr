@@ -3,25 +3,8 @@ import org.openrndr.*
 import org.openrndr.color.ColorRGBa
 import org.openrndr.extra.color.presets.DARK_GRAY
 import org.openrndr.extra.color.presets.SLATE_GRAY
-import org.openrndr.extra.color.presets.WHITE_SMOKE
 import org.openrndr.math.Vector2
-import org.openrndr.math.map
 import org.openrndr.shape.Circle
-import org.openrndr.shape.Rectangle
-import targets.*
-import targets.Target
-import kotlin.random.Random
-
-fun nextTarget(randomIndex: Int, boundaries: Rectangle): Target{
-    return when(Random.nextInt(1,8)){
-        1 -> BonusTarget(boundaries)
-        2 -> FreezeTarget(boundaries)
-        3 -> BadTarget(boundaries)
-        else -> {
-            NormalTarget(boundaries)
-        }
-    }
-}
 
 fun main() = application {
     configure {
