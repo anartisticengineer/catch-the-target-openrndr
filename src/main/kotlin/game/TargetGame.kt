@@ -1,5 +1,6 @@
 package game
 
+import dialog.HUD
 import org.openrndr.shape.Rectangle
 import player.Player
 import targets.*
@@ -8,13 +9,18 @@ import kotlin.random.Random
 
 class TargetGame(boundaries: Rectangle) {
     private val boundaryRectangle = boundaries
-    private val speedIncrease = 1.2
+    private val hud = HUD(boundaries)
+    private val speedIncrease = 0.2
     private val speedDecrease = 0.9
     private var badTargetLifespan = 0
+    private var lives = 3
     val player = Player(boundaries.center, boundaries)
     var currentTarget: Target = NormalTarget(boundaries)
     var score = 0
-    var lives = 3
+    val hudText
+        get() = hud.allText(lives, score)
+    val hudPositions
+        get() = hud.allPositions
     val gameOver
         get() = lives < 0
 
@@ -44,7 +50,7 @@ class TargetGame(boundaries: Rectangle) {
             when(currentTarget.targetType){
                 TargetType.BONUS -> {
                     score += 5
-                    player.speed *= speedIncrease
+                    player.speed += speedIncrease
                 }
                 TargetType.FREEZE -> {
                     score += 1
@@ -55,7 +61,7 @@ class TargetGame(boundaries: Rectangle) {
                 }
                 else -> {
                     score += 1
-                    player.speed *= speedIncrease
+                    player.speed += speedIncrease
                 }
             }
             currentTarget = getNextTarget(boundaryRectangle)
