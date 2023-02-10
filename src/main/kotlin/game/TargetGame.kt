@@ -13,6 +13,7 @@ class TargetGame(boundaries: Rectangle) {
     private val speedIncrease = 0.2
     private val speedDecrease = 0.9
     private var badTargetLifespan = 0
+    private var lifeTargetLifespan = 0
     private var lives = 3
     val player = Player(boundaries.center, boundaries)
     var currentTarget: Target = NormalTarget(boundaries)
@@ -25,10 +26,11 @@ class TargetGame(boundaries: Rectangle) {
         get() = lives < 0
 
     private fun getNextTarget(boundaries: Rectangle): Target {
-        return when(Random.nextInt(1,8)){
+        return when(if (score % 10 < 8) 0 else Random.nextInt(1, 5)){
             1 -> BonusTarget(boundaries)
             2 -> FreezeTarget(boundaries)
             3 -> BadTarget(boundaries)
+            4 -> LifeTarget(boundaries)
             else -> {
                 NormalTarget(boundaries)
             }
@@ -45,8 +47,16 @@ class TargetGame(boundaries: Rectangle) {
                 currentTarget = getNextTarget(boundaryRectangle)
             }
         }
+        //LIFE Target
+        if (currentTarget.targetType == TargetType.LIFE) {
+            lifeTargetLifespan -= 1
+            if (lifeTargetLifespan <= 0) {
+                lifeTargetLifespan = 0
+                currentTarget = getNextTarget(boundaryRectangle)
+            }
+        }
         //HIT
-        if (currentTarget.distFromPlayer(player.position) < 15.0){
+        if (currentTarget.distFromPlayer(player.position) < 20.0){
             when(currentTarget.targetType){
                 TargetType.BONUS -> {
                     score += 5
@@ -59,6 +69,10 @@ class TargetGame(boundaries: Rectangle) {
                 TargetType.BAD -> {
                     lives = -1
                 }
+                TargetType.LIFE -> {
+                    lives += 1
+                    score += 1
+                }
                 else -> {
                     score += 1
                     player.speed += speedIncrease
@@ -66,6 +80,7 @@ class TargetGame(boundaries: Rectangle) {
             }
             currentTarget = getNextTarget(boundaryRectangle)
             badTargetLifespan = if (currentTarget.targetType == TargetType.BAD) 100 else 0
+            lifeTargetLifespan = if (currentTarget.targetType == TargetType.LIFE) 100 else 0
         }
         //OUT OF BOUNDS
         if (!player.inBounds) {
