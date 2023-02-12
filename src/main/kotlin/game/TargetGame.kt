@@ -15,6 +15,7 @@ class TargetGame(boundaries: Rectangle) {
     private var badTargetLifespan = 0
     private var lifeTargetLifespan = 0
     private var lives = 3
+    private var timeBonus = 100.0
     val player = Player(boundaries.center, boundaries)
     var currentTarget: Target = NormalTarget(boundaries)
     var score = 0
@@ -26,7 +27,8 @@ class TargetGame(boundaries: Rectangle) {
         get() = lives < 0
 
     private fun getNextTarget(boundaries: Rectangle): Target {
-        return when(if (score % 10 < 8) 0 else Random.nextInt(1, 5)){
+        timeBonus = 100.0
+        return when(if (score % 50 < 40) 0 else Random.nextInt(1, 5)){
             1 -> BonusTarget(boundaries)
             2 -> FreezeTarget(boundaries)
             3 -> BadTarget(boundaries)
@@ -37,8 +39,13 @@ class TargetGame(boundaries: Rectangle) {
         }
     }
 
+    private fun difficultyFactor(): Int {
+        return (boundaryRectangle.center.distanceTo(currentTarget.position) / 100).toInt()
+    }
+
     fun runGame(){
         player.update()
+        timeBonus *= 0.99
         //BAD Target
         if (currentTarget.targetType == TargetType.BAD){
             badTargetLifespan -= 1
@@ -59,11 +66,11 @@ class TargetGame(boundaries: Rectangle) {
         if (currentTarget.distFromPlayer(player.position) < 20.0){
             when(currentTarget.targetType){
                 TargetType.BONUS -> {
-                    score += 5
+                    score += (5 * (difficultyFactor() + timeBonus.toInt()))
                     player.speed += speedIncrease
                 }
                 TargetType.FREEZE -> {
-                    score += 1
+                    score += difficultyFactor() + timeBonus.toInt()
                     player.speed *= speedDecrease
                 }
                 TargetType.BAD -> {
@@ -71,10 +78,10 @@ class TargetGame(boundaries: Rectangle) {
                 }
                 TargetType.LIFE -> {
                     lives += 1
-                    score += 1
+                    score += difficultyFactor() + timeBonus.toInt()
                 }
                 else -> {
-                    score += 1
+                    score += difficultyFactor() + timeBonus.toInt()
                     player.speed += speedIncrease
                 }
             }

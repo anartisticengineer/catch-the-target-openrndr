@@ -20,6 +20,7 @@ fun main() = application {
     program {
         var game = TargetGame(drawer.bounds)
         val gameOverScreen = GameOver(drawer.bounds)
+        val fontDirectory = "./data/fonts/Oxygen-Regular.ttf"
 
         keyboard.keyDown.listen {
             game.player.changeDirection(it.key)
@@ -34,7 +35,7 @@ fun main() = application {
             drawer.fill = ColorRGBa.WHITE_SMOKE
             drawer.stroke = ColorRGBa.SLATE_GRAY
             drawer.strokeWeight = 3.0
-            drawer.fontMap = loadFont("./data/fonts/SIMPLIFICA Typeface.ttf", 30.0, contentScale = 2.0)
+            drawer.fontMap = loadFont(fontDirectory, 30.0)
             if (!game.gameOver) {
                 game.runGame()
                 //SCORE

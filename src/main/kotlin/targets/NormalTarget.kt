@@ -2,7 +2,6 @@ package targets
 
 import org.openrndr.color.ColorRGBa
 import org.openrndr.extra.color.presets.ANTIQUE_WHITE
-import org.openrndr.extra.color.presets.WHITE_SMOKE
 import org.openrndr.shape.Rectangle
 
 class NormalTarget(boundaries: Rectangle) : Target(boundaries) {
