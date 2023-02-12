@@ -1,6 +1,5 @@
 package dialog
 
-import org.openrndr.math.Vector2
 import org.openrndr.shape.Rectangle
 
 class GameOver(boundaries: Rectangle) {

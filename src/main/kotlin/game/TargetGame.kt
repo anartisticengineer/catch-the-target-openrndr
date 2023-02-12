@@ -7,8 +7,7 @@ import targets.*
 import targets.Target
 import kotlin.random.Random
 
-class TargetGame(boundaries: Rectangle) {
-    private val boundaryRectangle = boundaries
+class TargetGame(val boundaries: Rectangle) {
     private val hud = HUD(boundaries)
     private val speedIncrease = 0.2
     private val speedDecrease = 0.9
@@ -40,7 +39,7 @@ class TargetGame(boundaries: Rectangle) {
     }
 
     private fun difficultyFactor(): Int {
-        return (boundaryRectangle.center.distanceTo(currentTarget.position) / 100).toInt()
+        return (boundaries.center.distanceTo(currentTarget.position) / 100).toInt()
     }
 
     fun runGame(){
@@ -51,7 +50,7 @@ class TargetGame(boundaries: Rectangle) {
             badTargetLifespan -= 1
             if (badTargetLifespan <= 0) {
                 badTargetLifespan = 0
-                currentTarget = getNextTarget(boundaryRectangle)
+                currentTarget = getNextTarget(boundaries)
             }
         }
         //LIFE Target
@@ -59,7 +58,7 @@ class TargetGame(boundaries: Rectangle) {
             lifeTargetLifespan -= 1
             if (lifeTargetLifespan <= 0) {
                 lifeTargetLifespan = 0
-                currentTarget = getNextTarget(boundaryRectangle)
+                currentTarget = getNextTarget(boundaries)
             }
         }
         //HIT
@@ -85,14 +84,14 @@ class TargetGame(boundaries: Rectangle) {
                     player.speed += speedIncrease
                 }
             }
-            currentTarget = getNextTarget(boundaryRectangle)
+            currentTarget = getNextTarget(boundaries)
             badTargetLifespan = if (currentTarget.targetType == TargetType.BAD) 100 else 0
             lifeTargetLifespan = if (currentTarget.targetType == TargetType.LIFE) 100 else 0
         }
         //OUT OF BOUNDS
         if (!player.inBounds) {
             lives -= 1
-            player.position = boundaryRectangle.center
+            player.position = boundaries.center
         }
     }
 }

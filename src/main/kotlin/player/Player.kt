@@ -7,9 +7,9 @@ import org.openrndr.KEY_ARROW_UP
 import org.openrndr.math.Vector2
 import org.openrndr.shape.Rectangle
 
-class Player(initialPosition: Vector2, private val boundaries: Rectangle) {
+class Player(var position: Vector2, private val boundaries: Rectangle) {
     val radius = 20.0
-    var position = initialPosition
+//    var position = initialPosition
     var speed = 5.0
     private var dir = Vector2.ZERO
     val inBounds
