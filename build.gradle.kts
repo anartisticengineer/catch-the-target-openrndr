@@ -123,7 +123,7 @@ dependencies {
         }
     }
     implementation(kotlin("stdlib-jdk8"))
-    testImplementation(libs.junit)
+    testImplementation(kotlin("test"))
 }
 
 // ------------------------------------------------------------------------------------------------------------------ //
@@ -136,6 +136,9 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
 // ------------------------------------------------------------------------------------------------------------------ //
 
 project.setProperty("mainClassName", applicationMainClass)

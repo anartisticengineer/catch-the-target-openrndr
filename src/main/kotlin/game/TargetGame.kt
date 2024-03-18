@@ -11,12 +11,12 @@ class TargetGame(val boundaries: Rectangle) {
     private val hud = HUD(boundaries)
     private val speedIncrease = 0.2
     private val speedDecrease = 0.9
-    private var lives = 3
     private var timeBonus = 100.0
     val player = Player(boundaries.center, boundaries)
     var currentTarget: Target = NormalTarget(boundaries)
     var badTargetLifespan = 0
     var lifeTargetLifespan = 0
+    var lives = 3
     var score = 0
     val hudText
         get() = hud.allText(lives, score)
@@ -42,7 +42,7 @@ class TargetGame(val boundaries: Rectangle) {
         return (boundaries.center.distanceTo(currentTarget.position) / 100).toInt()
     }
 
-    private fun registerHit() {
+    fun registerHit() {
         when(currentTarget.targetType){
             TargetType.BONUS -> {
                 score += (5 * (difficultyFactor() + timeBonus.toInt()))
