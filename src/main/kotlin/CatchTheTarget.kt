@@ -8,6 +8,7 @@ import org.openrndr.extra.color.presets.ORANGE_RED
 import org.openrndr.extra.color.presets.SLATE_GRAY
 import org.openrndr.extra.color.presets.WHITE_SMOKE
 import org.openrndr.shape.Circle
+import targets.TargetType
 
 fun main() = application {
     configure {
@@ -31,11 +32,14 @@ fun main() = application {
             }
         }
         extend {
+            val targetContour = Circle(game.currentTarget.position, game.currentTarget.radius).contour
+
             drawer.clear(ColorRGBa.fromHex("#181818"))
             drawer.fill = ColorRGBa.WHITE_SMOKE
             drawer.stroke = ColorRGBa.SLATE_GRAY
             drawer.strokeWeight = 3.0
             drawer.fontMap = loadFont(fontDirectory, 30.0)
+
             if (!game.gameOver) {
                 game.runGame()
                 //SCORE
@@ -50,7 +54,17 @@ fun main() = application {
 
                 //TARGET
                 drawer.stroke = game.currentTarget.targetColor
-                drawer.circle(game.currentTarget.position, game.currentTarget.radius)
+                when (game.currentTarget.targetType) {
+                    TargetType.BAD -> {
+                        drawer.contour(targetContour.sub(0.0, game.badTargetLifespan / 100.0))
+                    }
+                    TargetType.LIFE -> {
+                        drawer.contour(targetContour.sub(0.0, game.lifeTargetLifespan / 100.0))
+                    }
+                    else -> {
+                        drawer.contour(targetContour)
+                    }
+                }
             } else {
                 drawer.texts(gameOverScreen.allTexts(game.score), gameOverScreen.allPositions)
             }

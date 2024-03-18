@@ -11,12 +11,12 @@ class TargetGame(val boundaries: Rectangle) {
     private val hud = HUD(boundaries)
     private val speedIncrease = 0.2
     private val speedDecrease = 0.9
-    private var badTargetLifespan = 0
-    private var lifeTargetLifespan = 0
     private var lives = 3
     private var timeBonus = 100.0
     val player = Player(boundaries.center, boundaries)
     var currentTarget: Target = NormalTarget(boundaries)
+    var badTargetLifespan = 0
+    var lifeTargetLifespan = 0
     var score = 0
     val hudText
         get() = hud.allText(lives, score)
@@ -25,7 +25,7 @@ class TargetGame(val boundaries: Rectangle) {
     val gameOver
         get() = lives < 0
 
-    private fun getNextTarget(boundaries: Rectangle): Target {
+    private fun getNextTarget(): Target {
         timeBonus = 100.0
         return when(if (score % 50 < 40) 0 else Random.nextInt(1, 5)){
             1 -> BonusTarget(boundaries)
@@ -42,6 +42,33 @@ class TargetGame(val boundaries: Rectangle) {
         return (boundaries.center.distanceTo(currentTarget.position) / 100).toInt()
     }
 
+    private fun registerHit() {
+        when(currentTarget.targetType){
+            TargetType.BONUS -> {
+                score += (5 * (difficultyFactor() + timeBonus.toInt()))
+                player.speed += speedIncrease
+            }
+            TargetType.FREEZE -> {
+                score += difficultyFactor() + timeBonus.toInt()
+                player.speed *= speedDecrease
+            }
+            TargetType.BAD -> {
+                lives = -1
+            }
+            TargetType.LIFE -> {
+                lives += 1
+                score += difficultyFactor() + timeBonus.toInt()
+            }
+            else -> {
+                score += difficultyFactor() + timeBonus.toInt()
+                player.speed += speedIncrease
+            }
+        }
+        currentTarget = getNextTarget()
+        badTargetLifespan = if (currentTarget.targetType == TargetType.BAD) 100 else 0
+        lifeTargetLifespan = if (currentTarget.targetType == TargetType.LIFE) 100 else 0
+    }
+
     fun runGame(){
         player.update()
         timeBonus *= 0.99
@@ -50,7 +77,7 @@ class TargetGame(val boundaries: Rectangle) {
             badTargetLifespan -= 1
             if (badTargetLifespan <= 0) {
                 badTargetLifespan = 0
-                currentTarget = getNextTarget(boundaries)
+                currentTarget = getNextTarget()
             }
         }
         //LIFE Target
@@ -58,35 +85,12 @@ class TargetGame(val boundaries: Rectangle) {
             lifeTargetLifespan -= 1
             if (lifeTargetLifespan <= 0) {
                 lifeTargetLifespan = 0
-                currentTarget = getNextTarget(boundaries)
+                currentTarget = getNextTarget()
             }
         }
         //HIT
         if (currentTarget.distFromPlayer(player.position) < 20.0){
-            when(currentTarget.targetType){
-                TargetType.BONUS -> {
-                    score += (5 * (difficultyFactor() + timeBonus.toInt()))
-                    player.speed += speedIncrease
-                }
-                TargetType.FREEZE -> {
-                    score += difficultyFactor() + timeBonus.toInt()
-                    player.speed *= speedDecrease
-                }
-                TargetType.BAD -> {
-                    lives = -1
-                }
-                TargetType.LIFE -> {
-                    lives += 1
-                    score += difficultyFactor() + timeBonus.toInt()
-                }
-                else -> {
-                    score += difficultyFactor() + timeBonus.toInt()
-                    player.speed += speedIncrease
-                }
-            }
-            currentTarget = getNextTarget(boundaries)
-            badTargetLifespan = if (currentTarget.targetType == TargetType.BAD) 100 else 0
-            lifeTargetLifespan = if (currentTarget.targetType == TargetType.LIFE) 100 else 0
+            registerHit()
         }
         //OUT OF BOUNDS
         if (!player.inBounds) {
