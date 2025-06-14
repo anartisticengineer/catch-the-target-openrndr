@@ -22,7 +22,7 @@ val orxFeatures = setOf<String>(
     "orx-fx",
 //  "orx-glslify",
 //  "orx-gradient-descent",
-//    "orx-git-archiver",
+//  "orx-git-archiver",
     "orx-gui",
     "orx-image-fit",
 //  "orx-integral-image",
