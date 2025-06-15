@@ -4,9 +4,9 @@ import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "org.openrndr.template"
-version = "0.4.0"
+version = "0.4.5"
 
-val applicationMainClass = "TemplateProgramKt"
+val applicationMainClass = "CatchTheTargetKt"
 
 /**  ## additional ORX features to be added to this project */
 val orxFeatures = setOf<String>(
@@ -14,7 +14,7 @@ val orxFeatures = setOf<String>(
     "orx-camera",
 //  "orx-chataigne",
     "orx-color",
-    "orx-compositor",
+//  "orx-compositior",
 //  "orx-dnk3",
 //  "orx-easing",
 //  "orx-file-watcher",
@@ -50,9 +50,11 @@ val orxFeatures = setOf<String>(
     "orx-shade-styles",
 //  "orx-shader-phrases",
     "orx-shapes",
+//  "orx-svg",
 //  "orx-syphon",
 //  "orx-temporal-blur",
-//  "orx-tensorflow",    
+//  "orx-tensorflow",
+//  "orx-text-writer",
 //  "orx-time-operators",
 //  "orx-timer",
 //  "orx-triangulation",
